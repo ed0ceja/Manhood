@@ -22,6 +22,12 @@ export default function WelcomePage() {
   const [isVerifying, setIsVerifying] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [isWorldApp, setIsWorldApp] = useState<boolean | null>(null)
+  const [mounted, setMounted] = useState(false)
+
+  // Only render after client-side hydration to prevent getComputedStyle errors
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   // Check if running in World App on mount
   useEffect(() => {
@@ -152,6 +158,18 @@ export default function WelcomePage() {
         setIsVerifying(false)
       }
     }
+  }
+
+  // Don't render until after hydration to prevent getComputedStyle errors
+  if (!mounted) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-background">
+        <div className="w-full max-w-md mx-auto flex flex-col items-center text-center space-y-6">
+          <div className="relative w-40 h-60 bg-muted animate-pulse rounded-lg" />
+          <div className="h-8 w-48 bg-muted animate-pulse rounded" />
+        </div>
+      </div>
+    )
   }
 
   return (
