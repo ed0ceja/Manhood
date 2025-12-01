@@ -30,8 +30,13 @@ export default function WelcomePage() {
       // We'll only check when the user actually tries to verify
       // This avoids errors when not in World App
       const checkMiniKit = () => {
-        // Default to false - we'll check when user clicks the button
-        setIsWorldApp(false)
+        try {
+          // Default to false - we'll check when user clicks the button
+          setIsWorldApp(false)
+        } catch (error) {
+          console.error('Error checking MiniKit:', error)
+          setIsWorldApp(false)
+        }
       }
       
       // Check after a short delay to allow MiniKitProvider to initialize
