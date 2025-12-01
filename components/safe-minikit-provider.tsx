@@ -1,23 +1,11 @@
 "use client"
 
 import { MiniKitProvider } from "@worldcoin/minikit-js/minikit-provider"
-import { useEffect, useState } from "react"
 
 export function SafeMiniKitProvider({ children }: { children: React.ReactNode }) {
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    // Only render MiniKitProvider after client-side hydration
-    setMounted(true)
-  }, [])
-
-  // During SSR or before mount, render without MiniKitProvider
-  if (!mounted) {
-    return <>{children}</>
-  }
-
-  // After mount, wrap with MiniKitProvider
-  // ErrorBoundary in layout.tsx will catch any errors
+  // Always render MiniKitProvider to prevent hydration mismatches
+  // MiniKitProvider handles cases where it's not in World App gracefully
+  // This prevents the getComputedStyle error from hydration mismatches
   return <MiniKitProvider>{children}</MiniKitProvider>
 }
 
