@@ -96,17 +96,17 @@ export function BotTab() {
       const { id } = await initiateRes.json()
 
       // Step 2: Prepare payment payload
-      // 0.3 USDC payment
+      // 0.01 USDC payment
       const payload: PayCommandInput = {
         reference: id,
         to: PAYMENT_WALLET,
         tokens: [
           {
             symbol: Tokens.USDC,
-            token_amount: tokenToDecimals(0.3, Tokens.USDC).toString(),
+            token_amount: tokenToDecimals(0.01, Tokens.USDC).toString(),
           },
         ],
-        description: 'Ask a question about manhood - 0.3 USDC',
+        description: 'Ask a question about manhood - 0.01 USDC',
       }
 
       // Step 3: Send payment command
@@ -229,7 +229,7 @@ export function BotTab() {
       {/* Header */}
       <div className="space-y-2 pb-4">
         <h2 className="text-2xl font-bold">Be a MAN and ask questions</h2>
-        <p className="text-base text-muted-foreground leading-relaxed">Ask questions and get personalized guidance (0.3 USDC per question)</p>
+        <p className="text-base text-muted-foreground leading-relaxed">Ask questions and get personalized guidance (0.01 USDC per question)</p>
       </div>
 
       {/* Chat Messages */}
