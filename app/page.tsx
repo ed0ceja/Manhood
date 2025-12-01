@@ -164,6 +164,7 @@ export default function WelcomePage() {
             fill
             sizes="160px"
             className="object-contain rounded-lg shadow-lg"
+            priority
           />
         </div>
 
