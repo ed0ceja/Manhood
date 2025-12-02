@@ -88,7 +88,7 @@ export default function WelcomePage() {
       if (finalPayload.status === 'error') {
         // Check if error is because user already verified
         // For demo purposes, treat "already verified" as success
-        const errorDetail = finalPayload.detail || ''
+        const errorDetail = (finalPayload as any).detail || ''
         if (errorDetail.toLowerCase().includes('already verified') || 
             errorDetail.toLowerCase().includes('nullifier')) {
           // User already verified - for demo, show as success and redirect
@@ -97,7 +97,7 @@ export default function WelcomePage() {
           return
         }
         
-        setError(finalPayload.detail || 'Verification was cancelled or failed. Please try again.')
+        setError((finalPayload as any).detail || 'Verification was cancelled or failed. Please try again.')
         setIsVerifying(false)
         return
       }
