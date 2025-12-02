@@ -1,8 +1,7 @@
 import type React from "react"
 import type { Metadata } from "next"
 import { Geist } from "next/font/google"
-import { SafeMiniKitProvider } from "@/components/safe-minikit-provider"
-import { ErrorBoundary } from "@/components/error-boundary"
+import { MiniKitProvider } from "@worldcoin/minikit-js/minikit-provider"
 import "./globals.css"
 
 const _geist = Geist({ subsets: ["latin"] })
@@ -36,14 +35,10 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`font-sans antialiased`} suppressHydrationWarning>
-        <ErrorBoundary>
-          <SafeMiniKitProvider>
-            {children}
-          </SafeMiniKitProvider>
-        </ErrorBoundary>
-      </body>
+    <html lang="en">
+      <MiniKitProvider>
+        <body className={`font-sans antialiased`}>{children}</body>
+      </MiniKitProvider>
     </html>
   )
 }
