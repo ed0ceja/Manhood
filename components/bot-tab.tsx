@@ -129,7 +129,7 @@ export function BotTab() {
           throw new Error(payment.error || 'Payment verification failed')
         }
       } else {
-        throw new Error(finalPayload.detail || 'Payment was cancelled or failed')
+        throw new Error((finalPayload as any).detail || 'Payment was cancelled or failed')
       }
     } catch (error: any) {
       console.error('Payment error:', error)

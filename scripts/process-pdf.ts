@@ -5,11 +5,10 @@
 
 import dotenv from 'dotenv'
 import path from 'path'
+import fs from 'fs'
 
 // Load .env.local file
 dotenv.config({ path: path.join(process.cwd(), '.env.local') })
-import fs from 'fs'
-import path from 'path'
 import { cleanText } from '../lib/text-processing'
 import { generateEmbeddings } from '../lib/embeddings'
 import { addDocuments, getCollection, clearCollection } from '../lib/vector-db-simple'

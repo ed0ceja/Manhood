@@ -71,7 +71,7 @@ FORMATTING:
         content: msg.content,
       })),
       temperature: 0.8,
-      maxTokens: 1000,
+      maxOutputTokens: 1000,
     })
 
     return result.toTextStreamResponse()
