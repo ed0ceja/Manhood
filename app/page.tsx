@@ -4,11 +4,11 @@ import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
-import { 
-  MiniKit, 
-  VerifyCommandInput, 
-  VerificationLevel, 
-  ISuccessResult 
+import {
+  MiniKit,
+  VerifyCommandInput,
+  VerificationLevel,
+  ISuccessResult
 } from "@worldcoin/minikit-js"
 
 /**
@@ -33,10 +33,10 @@ export default function WelcomePage() {
         // Default to false - we'll check when user clicks the button
         setIsWorldApp(false)
       }
-      
+
       // Check after a short delay to allow MiniKitProvider to initialize
       const timeoutId = setTimeout(checkMiniKit, 100)
-      
+
       return () => clearTimeout(timeoutId)
     } else {
       setIsWorldApp(false)
@@ -55,7 +55,7 @@ export default function WelcomePage() {
         setIsWorldApp(false)
         return
       }
-      
+
       // Now safely call isInstalled
       isInstalled = MiniKit.isInstalled()
     } catch (error: any) {
@@ -89,14 +89,14 @@ export default function WelcomePage() {
         // Check if error is because user already verified
         // For demo purposes, treat "already verified" as success
         const errorDetail = (finalPayload as any).detail || ''
-        if (errorDetail.toLowerCase().includes('already verified') || 
-            errorDetail.toLowerCase().includes('nullifier')) {
+        if (errorDetail.toLowerCase().includes('already verified') ||
+          errorDetail.toLowerCase().includes('nullifier')) {
           // User already verified - for demo, show as success and redirect
           // This allows the verification flow to be shown again for presentations
           router.push('/dashboard')
           return
         }
-        
+
         setError((finalPayload as any).detail || 'Verification was cancelled or failed. Please try again.')
         setIsVerifying(false)
         return
@@ -123,8 +123,8 @@ export default function WelcomePage() {
         // Check if backend says already verified
         // For demo purposes, treat "already verified" as success
         const errorMsg = verifyResponseJson.message || ''
-        if (errorMsg.toLowerCase().includes('already verified') || 
-            verifyResponseJson.verifyRes?.detail?.toLowerCase().includes('already verified')) {
+        if (errorMsg.toLowerCase().includes('already verified') ||
+          verifyResponseJson.verifyRes?.detail?.toLowerCase().includes('already verified')) {
           // User already verified - for demo, show as success and redirect
           router.push('/dashboard')
         } else {
@@ -138,8 +138,8 @@ export default function WelcomePage() {
       // Check if error message indicates already verified
       // For demo purposes, treat "already verified" as success
       const errorMsg = error.message || ''
-      if (errorMsg.toLowerCase().includes('already verified') || 
-          errorMsg.toLowerCase().includes('nullifier')) {
+      if (errorMsg.toLowerCase().includes('already verified') ||
+        errorMsg.toLowerCase().includes('nullifier')) {
         // User already verified - for demo, show as success and redirect
         router.push('/dashboard')
       } else {
@@ -169,10 +169,10 @@ export default function WelcomePage() {
         </div>
 
         <div className="w-full pt-2 space-y-3">
-          <Button 
+          <Button
             onClick={handleJoinBrotherhood}
             disabled={isVerifying}
-            size="lg" 
+            size="lg"
             className="w-full h-14 text-base font-medium"
           >
             {isVerifying ? "Verifying..." : "Join the Brotherhood"}
