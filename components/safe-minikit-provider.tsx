@@ -7,7 +7,7 @@ export function SafeMiniKitProvider({ children }: { children: React.ReactNode })
   // MiniKitProvider handles cases where it's not in World App gracefully
   // This prevents the getComputedStyle error from hydration mismatches
   return (
-    <MiniKitProvider appId={process.env.NEXT_PUBLIC_WLD_APP_ID}>
+    <MiniKitProvider props={{ appId: process.env.NEXT_PUBLIC_WLD_APP_ID! }}>
       {children}
     </MiniKitProvider>
   )
