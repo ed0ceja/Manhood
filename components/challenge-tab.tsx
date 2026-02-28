@@ -16,22 +16,23 @@ export function ChallengeTab() {
   const [completed, setCompleted] = useState(false)
   const [loading, setLoading] = useState(true)
   const [completing, setCompleting] = useState(false)
-  const [nullifier, setNullifier] = useState<string | null>(null)
 
   useEffect(() => {
-    const stored = localStorage.getItem('nullifier')
-    setNullifier(stored)
-    fetchChallenge(stored)
+    fetchChallenge()
   }, [])
 
-  const fetchChallenge = async (nullifierHash: string | null) => {
+  const fetchChallenge = async () => {
     try {
-      const params = nullifierHash ? `?nullifier=${nullifierHash}` : ''
-      const res = await fetch(`/api/challenge${params}`)
+      const res = await fetch('/api/challenge')
       const data = await res.json()
       setChallenge(data.challenge)
       setCompletionCount(data.completion_count ?? 0)
-      setCompleted(data.completed ?? false)
+
+      // Check localStorage for completion on this device
+      if (data.challenge) {
+        const key = `completed_${data.challenge.id}`
+        setCompleted(localStorage.getItem(key) === 'true')
+      }
     } catch (error) {
       console.error('Failed to fetch challenge:', error)
     } finally {
@@ -40,18 +41,19 @@ export function ChallengeTab() {
   }
 
   const handleComplete = async () => {
-    if (!challenge || !nullifier || completing || completed) return
+    if (!challenge || completing || completed) return
     setCompleting(true)
     try {
       const res = await fetch('/api/challenge', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nullifier, challenge_id: challenge.id }),
+        body: JSON.stringify({ challenge_id: challenge.id }),
       })
       const data = await res.json()
       if (data.success) {
         setCompleted(true)
         setCompletionCount(data.completion_count)
+        localStorage.setItem(`completed_${challenge.id}`, 'true')
       }
     } catch (error) {
       console.error('Failed to complete challenge:', error)
@@ -126,16 +128,11 @@ export function ChallengeTab() {
         ) : (
           <Button
             onClick={handleComplete}
-            disabled={completing || !nullifier}
+            disabled={completing}
             className="w-full h-12 text-base font-medium"
           >
             {completing ? 'Marking complete...' : 'Mark as Complete'}
           </Button>
-        )}
-        {!nullifier && (
-          <p className="text-xs text-muted-foreground text-center mt-2">
-            Verify your identity to track your progress
-          </p>
         )}
       </div>
     </div>

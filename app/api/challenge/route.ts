@@ -10,12 +10,10 @@ function getSupabaseClient() {
   )
 }
 
-// GET: fetch today's challenge + completion count + user's completion status
+// GET: fetch today's challenge + completion count
 export async function GET(req: Request) {
   try {
     const supabase = getSupabaseClient()
-    const { searchParams } = new URL(req.url)
-    const nullifier = searchParams.get('nullifier')
     const today = new Date().toISOString().split('T')[0]
 
     const { data: challenge, error } = await supabase
@@ -28,23 +26,10 @@ export async function GET(req: Request) {
       return Response.json({ challenge: null })
     }
 
-    // Get completion count
     const { count } = await supabase
       .from('challenge_completions')
       .select('*', { count: 'exact', head: true })
       .eq('challenge_id', challenge.id)
-
-    // Check if this user completed it
-    let completed = false
-    if (nullifier) {
-      const { data: completion } = await supabase
-        .from('challenge_completions')
-        .select('id')
-        .eq('challenge_id', challenge.id)
-        .eq('user_nullifier', nullifier)
-        .single()
-      completed = !!completion
-    }
 
     return Response.json({
       challenge: {
@@ -54,36 +39,26 @@ export async function GET(req: Request) {
         challenge_date: challenge.challenge_date,
       },
       completion_count: count ?? 0,
-      completed,
     })
   } catch (error: any) {
     return Response.json({ error: error.message }, { status: 500 })
   }
 }
 
-// POST: mark challenge as complete
+// POST: increment completion count (anonymous)
 export async function POST(req: Request) {
   try {
     const supabase = getSupabaseClient()
-    const { nullifier, challenge_id } = await req.json()
+    const { challenge_id } = await req.json()
 
-    if (!nullifier || !challenge_id) {
-      return Response.json({ error: 'Missing nullifier or challenge_id' }, { status: 400 })
+    if (!challenge_id) {
+      return Response.json({ error: 'Missing challenge_id' }, { status: 400 })
     }
 
-    const { error } = await supabase
+    await supabase
       .from('challenge_completions')
-      .insert({ challenge_id, user_nullifier: nullifier })
+      .insert({ challenge_id, user_nullifier: crypto.randomUUID() })
 
-    if (error) {
-      // Unique constraint violation = already completed
-      if (error.code === '23505') {
-        return Response.json({ success: true, already_completed: true })
-      }
-      throw new Error(error.message)
-    }
-
-    // Return updated count
     const { count } = await supabase
       .from('challenge_completions')
       .select('*', { count: 'exact', head: true })
