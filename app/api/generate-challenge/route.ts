@@ -74,7 +74,8 @@ Respond with JSON in this exact format:
 }`,
     })
 
-    const parsed = JSON.parse(text)
+    const cleaned = text.replace(/```json\n?|\n?```/g, '').trim()
+    const parsed = JSON.parse(cleaned)
 
     const { error } = await supabase.from('daily_challenges').insert({
       challenge_text: parsed.challenge_text,
