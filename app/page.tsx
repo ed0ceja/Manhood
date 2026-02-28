@@ -185,12 +185,6 @@ export default function WelcomePage() {
             </div>
           )}
 
-          {/* Info message if not in World App */}
-          {isWorldApp === false && !error && (
-            <p className="text-xs text-muted-foreground">
-              Open this app in World App to verify your identity
-            </p>
-          )}
         </div>
 
         <p className="text-sm text-muted-foreground pt-2">
