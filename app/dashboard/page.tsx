@@ -1,8 +1,12 @@
 "use client"
 
+import { useState } from "react"
 import { BotTab } from "@/components/bot-tab"
+import { ChallengeTab } from "@/components/challenge-tab"
 
 export default function DashboardPage() {
+  const [activeTab, setActiveTab] = useState<"challenge" | "chat">("challenge")
+
   return (
     <div className="flex flex-col h-screen bg-background">
       {/* Header */}
@@ -12,9 +16,33 @@ export default function DashboardPage() {
         </div>
       </header>
 
-      {/* Main Content - Just the bot chat */}
+      {/* Tab switcher */}
+      <div className="flex border-b border-border">
+        <button
+          onClick={() => setActiveTab("challenge")}
+          className={`flex-1 py-3 text-sm font-medium transition-colors ${
+            activeTab === "challenge"
+              ? "text-foreground border-b-2 border-foreground"
+              : "text-muted-foreground"
+          }`}
+        >
+          Daily Challenge
+        </button>
+        <button
+          onClick={() => setActiveTab("chat")}
+          className={`flex-1 py-3 text-sm font-medium transition-colors ${
+            activeTab === "chat"
+              ? "text-foreground border-b-2 border-foreground"
+              : "text-muted-foreground"
+          }`}
+        >
+          Ask the Book
+        </button>
+      </div>
+
+      {/* Tab content */}
       <main className="flex-1 overflow-hidden">
-        <BotTab />
+        {activeTab === "challenge" ? <ChallengeTab /> : <BotTab />}
       </main>
     </div>
   )

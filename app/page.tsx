@@ -117,6 +117,10 @@ export default function WelcomePage() {
       const verifyResponseJson = await verifyResponse.json()
 
       if (verifyResponseJson.status === 200) {
+        // Store nullifier for challenge tracking
+        if (typeof window !== 'undefined' && (finalPayload as any).nullifier_hash) {
+          localStorage.setItem('nullifier', (finalPayload as any).nullifier_hash)
+        }
         // Verification successful - redirect to dashboard
         router.push('/dashboard')
       } else {
